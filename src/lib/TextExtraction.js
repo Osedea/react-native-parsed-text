@@ -39,7 +39,10 @@ class TextExtraction {
           let previousText = textLeft.substr(0, matches.index);
           indexOfMatchedString += matches.index;
 
-          parts.push({children: previousText});
+          parts.push({
+            children: previousText,
+            ...(pattern.props ? pattern.props : {}),
+          });
 
           parts.push(this.getMatchedPart(pattern, matches[0], matches, indexOfMatchedString));
 
@@ -47,7 +50,10 @@ class TextExtraction {
           indexOfMatchedString += matches[0].length;
         }
 
-        parts.push({children: textLeft});
+        parts.push({
+          children: textLeft,
+          ...(pattern.props ? pattern.props : {}),
+        });
 
         newParts.push(...parts);
       });
