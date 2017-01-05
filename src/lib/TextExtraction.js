@@ -5,9 +5,10 @@ class TextExtraction {
    *                              other options than pattern would be added to the parsed content
    * @param {RegExp} patterns[].pattern - RegExp to be used for parsing
    */
-  constructor(text, patterns) {
+  constructor(text, patterns, propsToPass) {
     this.text     = text;
     this.patterns = patterns || [];
+    this.propsToPass = propsToPass;
   }
 
   /**
@@ -15,7 +16,11 @@ class TextExtraction {
    * @return {Object[]} - props for all the parts of the text
    */
   parse() {
-    let parsedTexts = [{children: this.text}];
+    let parsedTexts = [{
+      children: this.text,
+      ...this.propsToPass,
+    }];
+
     this.patterns.forEach((pattern) => {
       let newParts = [];
 
@@ -37,14 +42,20 @@ class TextExtraction {
 
           let previousText = textLeft.substr(0, matches.index);
 
-          parts.push({children: previousText});
+          parts.push({
+            children: previousText,
+            ...this.propsToPass,
+          });
 
           parts.push(this.getMatchedPart(pattern, matches[0], matches));
 
           textLeft = textLeft.substr(matches.index + matches[0].length);
         }
 
-        parts.push({children: textLeft});
+        parts.push({
+          children: textLeft,
+          ...this.propsToPass,
+        });
 
         newParts.push(...parts);
       });

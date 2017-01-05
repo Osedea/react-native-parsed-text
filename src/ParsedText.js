@@ -28,10 +28,12 @@ class ParsedText extends React.Component {
     parse: React.PropTypes.arrayOf(
       React.PropTypes.oneOfType([defaultParseShape, customParseShape]),
     ),
+    childrenProps: React.PropTypes.shape(ReactNative.Text.propTypes),
   };
 
   static defaultProps = {
     parse: null,
+    childrenProps: {},
   };
 
   setNativeProps(nativeProps) {
@@ -56,7 +58,7 @@ class ParsedText extends React.Component {
     if (!this.props.parse)                       { return this.props.children; }
     if (typeof this.props.children !== 'string') { return this.props.children; }
 
-    const textExtraction = new TextExtraction(this.props.children, this.getPatterns());
+    const textExtraction = new TextExtraction(this.props.children, this.getPatterns(), this.props.childrenProps);
 
     return textExtraction.parse().map((props, index) => {
       return (
